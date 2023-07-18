@@ -1,52 +1,41 @@
-// const express = require("express");
-import UsersController from "./users/users-controller.js";
-import AuthenticationController from "./users/auth-controller.js";
-import TuitsController from "./tuits/tuits-controller.js";
-import express from "express";
-import cors from "cors";
+import express from 'express';
+import HelloController from "./controllers/hello-controller.js"
+import UserController from "./users/users-controller.js"
+import TuitsController from "./controllers/tuits/tuits-controller.js";
+import cors from 'cors'
 import session from "express-session";
+import AuthController from "./users/auth-controller.js";
 import mongoose from "mongoose";
 
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://127.0.0.1:27017/tuiter'
+//mongoose.connect(CONNECTION_STRING);
 mongoose.connect(
   "mongodb+srv://fgaziano98:Frockets98@cluster1.eec9mj4.mongodb.net/?retryWrites=true&w=majority"
 );
-// mongoose.connect("mongodb://127.0.0.1:27017/tuiter-su1-23");
 
-const app = express();
-app.set("trust proxy", 1);
-app.use(
-  cors({
-    credentials: true,
-    //origin: "https://a6--resonant-quokka-5a61c8.netlify.app",
-    origin: "http://localhost:3000",
-  })
-);
+const app = express()
+app.use(cors({
+  credentials: true,
+  origin: ["https://a6--amazing-bombolone-d11215.netlify.app", "http://localhost:3000"]
+})
+)
 app.use(
   session({
-    secret: "any string",
+    secret: 'any string',
     resave: false,
     proxy: true,
-    saveUninitialized: false,
-    cookie: {
-      sameSite: "none",
-      secure: true,
-    },
+    saveUninitialized: true,
+    //store: new session.MemoryStore(),
   })
 );
 
+app.set('trust proxy', 1)
+
 app.use(express.json());
-
-app.get("/hello", (req, res) => {
-  res.send("Hello World how are you! I'm awesome");
-});
-
-app.get("/hello/:name", (req, res) => {
-  res.send(`Hello ${req.params.name}`);
-});
-
-UsersController(app);
-AuthenticationController(app);
+AuthController(app)
 TuitsController(app);
+HelloController(app)
+UserController(app)
 
 const port = process.env.PORT || 4000;
-app.listen(4000);
+app.listen(port)

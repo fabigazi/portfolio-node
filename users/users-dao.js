@@ -1,21 +1,22 @@
 import usersModel from "./users-model.js";
 
-export function findAllUsers() {
-  return usersModel.find();
-}
+export const findAllUsers = () =>
+  usersModel.find();
 
-export function findUserByUsername(username) {
-  return usersModel.findOne({ username });
-}
+export const findUserById = (id) =>
+  usersModel.findById(id);
+
+export const findUserByUsername = (username) =>
+  usersModel.findOne({ username });
 
 export const findUserByCredentials = (username, password) =>
   usersModel.findOne({ username, password });
 
-export const findUserById = (userId) => usersModel.findById(userId);
+export const createUser = (user) =>
+  usersModel.create(user);
 
-export const deleteUser = (userId) => usersModel.deleteOne({ _id: userId });
-
-export const createUser = (user) => usersModel.create(user);
-
-export const updateUser = (userId, user) =>
-  usersModel.updateOne({ _id: userId }, { $set: user });
+export const updateUser = (id, user) =>
+  usersModel.updateOne({ _id: id }, { $set: user });
+  
+export const deleteUser = (id) =>
+  usersModel.deleteOne({ _id: id });
